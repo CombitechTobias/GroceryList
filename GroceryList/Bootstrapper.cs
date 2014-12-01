@@ -1,4 +1,5 @@
 using System.Web.Mvc;
+using GroceryList.Services;
 using Microsoft.Practices.Unity;
 using Unity.Mvc4;
 
@@ -30,7 +31,7 @@ namespace GroceryList
 
     public static void RegisterTypes(IUnityContainer container)
     {
-    
+        container.RegisterType<ILogger, Logger>();
     }
   }
 }
