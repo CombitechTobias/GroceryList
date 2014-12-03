@@ -1,4 +1,5 @@
-﻿@{
+﻿@model IEnumerable<GroceryList.Services.FoodStuff>
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -7,24 +8,110 @@
     <p class="lead">Välkommen till Grocery list - din hjälpreda i matbutiken.</p>
 </div>
 
+
+@section scripts
+{
+    <script src="~/Scripts/jquery.signalR-2.1.2.js"></script>
+    <script src="~/SignalR/hubs"></script>
+    <script src="~/Scripts/knockout-3.2.0.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            var chat = $.connection.groceryHub;
+
+            chat.client.broadcastGrocery = function(grocery) {
+                $('#groceries').append("<li>" + grocery + "</li>");
+            };
+
+            $.connection.hub.start().done(function() {
+                $('#addGrocery').click(function() {
+                    chat.server.send($('#grocery').val());
+                });
+            });
+
+            new GetGrocery();
+        });
+
+        var GetGrocery = function() {
+            this.$groceries = $("#groceries");
+            this.$searchInput = $("#searchGroceries");
+            this.$autoCompleteField = $("#autoComplete");
+            this.init();
+        };
+
+        GetGrocery.prototype.init = function() {
+            var self = this;
+            self.setupListeners();
+        };
+
+        GetGrocery.prototype.addGrocery = function(id) {
+            var self = this;
+            $.getJSON("Home/GetGrocery?id=" + id).done(function (grocery) {
+                console.log(grocery);
+                var list = $("<li>");
+                list.html(grocery.Name);
+                self.$groceries.append(list);
+            });
+        };
+
+        GetGrocery.prototype.setupListeners = function() {
+            var self = this;
+            self.$searchInput.on("keyup", function() {
+                var filter = $(this).val();
+                if (filter.length < 3) return;
+                self.getSuggestions(filter);
+            });
+        };
+
+        GetGrocery.prototype.getSuggestions = function(filter) {
+            var self = this;
+            $.getJSON("Home/GetGroceries?filter=" + filter).done(function (groceries) {
+                self.renderSuggestions(groceries);
+            });
+        };
+
+        GetGrocery.prototype.renderSuggestions = function (groceries) {
+            var self = this;
+            self.clearAutoComplete();
+            $.each(groceries, function (index, grocery) {
+                var list = $("<li>");
+                var link = $("<a>").attr("href", "#").html(grocery.Name);
+                list.append(link);
+                self.$autoCompleteField.append(list);
+                $("#autoComplete").append(list);
+                list.on("click", function() {
+                    self.addGrocery(grocery.Number);
+                    self.clearAutoComplete();
+                });
+            });
+        };
+
+        GetGrocery.prototype.clearAutoComplete = function() {
+            var self = this;
+            self.$autoCompleteField.find("li").remove();
+        };
+
+    </script>
+}
+
 <div class="row">
-    @*<div class="col-md-4">
-        <h2></h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
+    <div class="col-md-3">
+        <ul id="groceries">
+            <li>Mjölk</li>
+            <li>Mjöl</li>
+            <li>Smör</li>
+            <li>Kvarg</li>
+        </ul>
     </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
+    <div class="col-md-3">
+        <input type="text" id="grocery"/>
+        <input type="button" id="addGrocery" value="Add grocery"/>
     </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="http://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>*@
+    <div class="col-md-3">
+        <input type="text" id="searchGroceries"/>
+    </div>
+    <div class="col-md-3">
+        <ul id="autoComplete">
+            
+        </ul>
+    </div>
 </div>

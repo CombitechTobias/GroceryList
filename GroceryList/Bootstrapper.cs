@@ -32,6 +32,7 @@ namespace GroceryList
     public static void RegisterTypes(IUnityContainer container)
     {
         container.RegisterType<ILogger, Logger>();
+        container.RegisterType<IFoodAdministrationService, FoodAdministrationService>();
     }
   }
 }

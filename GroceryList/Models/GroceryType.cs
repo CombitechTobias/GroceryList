@@ -20,6 +20,19 @@ namespace GroceryList.Models
     public class Recipe
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public ICollection<Grocery> Groceries { get; set; } 
+    }
+
+    public class GroceryList
+    {
+        public int Id { get; set; }
+        public ICollection<Grocery> Groceries { get; set; }
+    }
+
+    public class GroceryListHistory
+    {
+        public int Id { get; set; }
+
     }
 }
