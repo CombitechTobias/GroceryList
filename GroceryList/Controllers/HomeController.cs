@@ -10,8 +10,8 @@ namespace GroceryList.Controllers
     {
         public ActionResult Index()
         {
-            //return View();
-            return RedirectToAction("Index", "Grocery");
+            return View();
+            //return RedirectToAction("Index", "Grocery");
         }
 
         public ActionResult About()

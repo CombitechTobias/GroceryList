@@ -35,17 +35,20 @@ namespace GroceryList.DAL
         public void RemoveGrocery(Grocery grocery)
         {
             _context.Groceries.Remove(grocery);
+            _context.SaveChanges();
         }
 
         public void RemoveGrocery(int id)
         {
             var grocery = _context.Groceries.Find(id);
             _context.Groceries.Remove(grocery);
+            _context.SaveChanges();
         }
 
         public void AddGrocery(Grocery grocery)
         {
-            throw new NotImplementedException();
+            _context.Groceries.Add(grocery);
+            _context.SaveChanges();
         }
     }
 }

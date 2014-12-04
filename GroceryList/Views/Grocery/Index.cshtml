@@ -5,14 +5,18 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
 <h2>Groceries</h2>
 
-@foreach (var item in Model)
-{
-    @Html.Partial("_Grocery", item)
-}
+<table>
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>@item.Name</td>
+            <td>@Html.ActionLink("Edit", "Edit", new { id = item.Id })</td>
+            <td>@Html.ActionLink("Delete", "Delete", new { id = item.Id })</td>
+        </tr>
+    }
+</table>
 
 <p>
     @Html.ActionLink("Create new", "Create")

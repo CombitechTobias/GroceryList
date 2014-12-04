@@ -22,6 +22,18 @@ namespace GroceryList.Controllers
             return View(_groceryRepository.GetGroceries().ToList());
         }
 
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Create(Grocery grocery)
+        {
+            _groceryRepository.AddGrocery(grocery);
+            return RedirectToAction("Index");
+        }
+
         public async Task<ActionResult> Edit(int id)
         {
             return View(await _groceryRepository.GetGroceryById(id));
