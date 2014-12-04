@@ -1,0 +1,23 @@
+﻿@model GroceryList.Models.Grocery
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>@Model.Name</legend>
+        @Html.HiddenFor(model => model.Id)
+        
+        <p>
+            <input type="submit" value="Save"/>
+        </p>
+    </fieldset>
+}
+
+<div>
+    @Html.ActionLink("Back", "Index")
+</div>

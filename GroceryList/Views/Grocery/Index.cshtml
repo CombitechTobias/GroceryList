@@ -1,0 +1,19 @@
+﻿@using System.Collections
+@model IEnumerable<GroceryList.Models.Grocery>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<h2>Groceries</h2>
+
+@foreach (var item in Model)
+{
+    @Html.Partial("_Grocery", item)
+}
+
+<p>
+    @Html.ActionLink("Create new", "Create")
+</p>
