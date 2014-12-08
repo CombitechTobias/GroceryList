@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -17,9 +18,9 @@ namespace GroceryList.DAL
             _context = context;
         }
 
-        public  IEnumerable<Grocery> GetGroceries()
+        public async Task<IEnumerable<Grocery>> GetGroceries()
         {
-            return  _context.Groceries;
+            return  await _context.Groceries.ToListAsync();
         }
 
         public async Task<Grocery> GetGroceryById(int id)
@@ -27,13 +28,15 @@ namespace GroceryList.DAL
             return await _context.Groceries.FirstOrDefaultAsync(g => g.Id == id);
         }
 
-        public IEnumerable<Grocery> GetGroceriesByName(string name)
+        public async Task<IEnumerable<Grocery>> GetGroceriesByName(string name)
         {
-            return _context.Groceries.Where(g => g.Name.StartsWith(name));
+            return await Task.Run<IEnumerable<Grocery>>(() => _context.Groceries.Where(g => g.Name.StartsWith(name)).ToList());
         }
 
         public void RemoveGrocery(Grocery grocery)
         {
+            if (grocery == null) throw new ArgumentException("grocery");
+
             _context.Groceries.Remove(grocery);
             _context.SaveChanges();
         }
@@ -47,8 +50,38 @@ namespace GroceryList.DAL
 
         public void AddGrocery(Grocery grocery)
         {
+            if (grocery == null) throw new ArgumentException("grocery");
+
             _context.Groceries.Add(grocery);
             _context.SaveChanges();
         }
+
+        public void AddGroceryToGroceryList(Grocery grocery)
+        {
+            if (grocery == null) throw new ArgumentException("grocery");
+
+            _context.GroceryLists.First().Groceries.Add(grocery);
+            _context.SaveChanges();
+        }
+
+        public void RemoveGroceryFromGroceryList(Grocery grocery)
+        {
+            if (grocery == null) throw new ArgumentException("grocery");
+
+            _context.GroceryLists.First().Groceries.Remove(grocery);
+            _context.SaveChanges();
+        }
+
+        public async Task<IEnumerable<Grocery>> GetGroceriesByGroceryListId()
+        {
+            return await Task.Run<IEnumerable<Grocery>>(() => _context.GroceryLists.First().Groceries.ToList());
+        }
+
+        #region IDisposable
+        public void Dispose()
+        {
+            _context.Dispose();
+        }
+        #endregion
     }
 }

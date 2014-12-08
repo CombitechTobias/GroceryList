@@ -7,13 +7,17 @@ using GroceryList.Models;
 
 namespace GroceryList.DAL
 {
-    public interface IGroceryRepository
+    public interface IGroceryRepository : IDisposable
     {
-        IEnumerable<Grocery> GetGroceries();
+        Task<IEnumerable<Grocery>> GetGroceries();
         Task<Grocery> GetGroceryById(int id);
-        IEnumerable<Grocery> GetGroceriesByName(string name);
+        Task<IEnumerable<Grocery>> GetGroceriesByName(string name);
         void RemoveGrocery(Grocery grocery);
         void RemoveGrocery(int id);
         void AddGrocery(Grocery grocery);
+
+        void AddGroceryToGroceryList(Grocery grocery);
+        void RemoveGroceryFromGroceryList(Grocery grocery);
+        Task<IEnumerable<Grocery>> GetGroceriesByGroceryListId();
     }
 }

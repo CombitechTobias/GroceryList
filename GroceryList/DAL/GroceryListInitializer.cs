@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
@@ -27,10 +26,10 @@ namespace GroceryList.DAL
             groceries.ForEach(g => context.Groceries.Add(g));
             context.SaveChanges();
 
-            //var recipies = new List<Recipe>
-            //{
-            //    new Recipe { Id=1, Name="Kycklingtallrik", },
-            //}
+            var groceryList = new Models.GroceryList() {Id = 1};
+
+            context.GroceryLists.Add(groceryList);
+            context.SaveChanges();
         }
     }
 }
