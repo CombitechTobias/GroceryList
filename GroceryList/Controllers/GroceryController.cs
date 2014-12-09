@@ -17,7 +17,7 @@ namespace GroceryList.Controllers
             _groceryRepository = groceryRepository;
         }
 
-        public async Task<ActionResult> GetAvailableGroceriesAsync()
+        public async Task<ActionResult> GetAvailableGroceries()
         {
             var groceries = await _groceryRepository.GetGroceriesAsync();
             return Json(
@@ -25,13 +25,13 @@ namespace GroceryList.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> GetGroceriesByGroceryListIdAsync()
+        public async Task<ActionResult> GetGroceriesByGroceryListId()
         {
             var groceries = await _groceryRepository.GetGroceriesByGroceryListIdAsync();
             return Json(groceries.Select(g => new {g.Id, g.Name}), JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> AddGroceryToGroceryListAsync(int id)
+        public async Task<ActionResult> AddGroceryToGroceryList(int id)
         {
             var grocery = await _groceryRepository.GetGroceryByIdAsync(id);
             if (grocery == null) return Json(JsonRequestBehavior.DenyGet);
@@ -40,7 +40,7 @@ namespace GroceryList.Controllers
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> RemoveGroceryFromGroceryListAsync(int id)
+        public async Task<ActionResult> RemoveGroceryFromGroceryList(int id)
         {
             var grocery = await _groceryRepository.GetGroceryByIdAsync(id);
             if (grocery == null) return Json(JsonRequestBehavior.DenyGet);
@@ -49,7 +49,7 @@ namespace GroceryList.Controllers
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> GetRecipiesAsync()
+        public async Task<ActionResult> GetRecipies()
         {
             var recipies = await _groceryRepository.GetRecipiesAsync();
             return Json(
