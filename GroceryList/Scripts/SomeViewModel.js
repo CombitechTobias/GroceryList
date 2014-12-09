@@ -6,12 +6,14 @@
 
     self._groceries = new GroceryViewModel($(initArguments.Groceries));
     self._groceryList = new GroceryListViewModel($(initArguments.CurrentGroceryList));
+    self._recipes = new RecipeViewModel($(initArguments.Recipes));
 };
 
 SomeViewModel.prototype.Initialize = function() {
     var self = this;
     self._groceries.GetGroceries();
     self._groceryList.GetGroceries();
+    self._recipes.GetRecipes();
 
     self.SetupEvents();
 };
@@ -132,30 +134,35 @@ GroceryListViewModel.prototype.ClearGroceries = function () {
 function RecipeViewModel(args) {
     var self = this;
 
-    self._recipies = args;
+    self._recipes = args;
 };
 
-RecipeViewModel.prototype.Recipies = function() {
+RecipeViewModel.prototype.Recipes = function() {
     var self = this;
-    return self._recipies;
+    return self._recipes;
 };
 
-RecipeViewModel.prototype.GetRecipies = function () {
+RecipeViewModel.prototype.GetRecipes = function () {
     var self = this;
-    $.getJSON("Grocery/GetRecipies").done(function (recipies) {
-        self.RenderRecipies(recipies);
+    $.getJSON("Grocery/GetRecipes").done(function (recipes) {
+        self.RenderRecipes(recipes);
     });
 };
 
-RecipeViewModel.prototype.RenderRecipies = function(recipies) {
+RecipeViewModel.prototype.RenderRecipes = function(recipes) {
     var self = this;
-    self.ClearGroceries();
-    $.each(recipies, function (key, value) {
+    self.ClearRecipes();
+    $.each(recipes, function (key, value) {
         var list = $("<li>");
         list.html(value.Name).attr("id", value.Id);
         list.on("click", function () {
             list.addClass("active").siblings().removeClass("active");
         });
-        self._recipies.append(list);
+        self._recipes.append(list);
     });
+};
+
+RecipeViewModel.prototype.ClearRecipes = function () {
+    var self = this;
+    self._recipes.find("li").remove();
 };

@@ -20,7 +20,7 @@ namespace GroceryList.DAL
         void RemoveGroceryFromGroceryListAsync(Grocery grocery);
         Task<IEnumerable<Grocery>> GetGroceriesByGroceryListIdAsync();
 
-        Task<IEnumerable<Recipe>> GetRecipiesAsync();
+        Task<IEnumerable<Recipe>> GetRecipesAsync();
         void AddGroceriesByRecipeIdAsync(int id);
     }
 }

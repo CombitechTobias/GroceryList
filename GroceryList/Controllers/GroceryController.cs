@@ -49,9 +49,9 @@ namespace GroceryList.Controllers
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> GetRecipies()
+        public async Task<ActionResult> GetRecipes()
         {
-            var recipies = await _groceryRepository.GetRecipiesAsync();
+            var recipies = await _groceryRepository.GetRecipesAsync();
             return Json(
                 recipies.Select(r => new {r.Id, r.Name}),
                 JsonRequestBehavior.AllowGet);

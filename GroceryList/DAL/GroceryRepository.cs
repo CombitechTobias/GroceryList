@@ -78,7 +78,7 @@ namespace GroceryList.DAL
             return await Task.Run<IEnumerable<Grocery>>(() => _context.GroceryLists.First().Groceries.ToList());
         }
 
-        public async Task<IEnumerable<Recipe>> GetRecipiesAsync()
+        public async Task<IEnumerable<Recipe>> GetRecipesAsync()
         {
             return await _context.Recipes.ToListAsync();
         }
