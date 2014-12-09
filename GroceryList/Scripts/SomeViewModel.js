@@ -44,8 +44,9 @@ SomeViewModel.prototype.GetSelectedGroceryIdFromGroceryList = function () {
     return self._groceryList.GroceryList().find("li.active:first").attr("id");
 };
 
-
-
+/********************************************
+* Matvarulistan                              *
+ ********************************************/
 
 function GroceryViewModel(args) {
     var self = this;
@@ -84,13 +85,9 @@ GroceryViewModel.prototype.ClearGroceries = function () {
 };
 
 
-
-
-
-
-
-
-
+/********************************************
+* Inköpslistan                               *
+ ********************************************/
 
 function GroceryListViewModel(args) {
     var self = this;
@@ -126,4 +123,39 @@ GroceryListViewModel.prototype.RenderGroceries = function (groceries) {
 GroceryListViewModel.prototype.ClearGroceries = function () {
     var self = this;
     self._groceryList.find("li").remove();
+};
+
+/********************************************
+* Receptlistan                               *
+ ********************************************/
+
+function RecipeViewModel(args) {
+    var self = this;
+
+    self._recipies = args;
+};
+
+RecipeViewModel.prototype.Recipies = function() {
+    var self = this;
+    return self._recipies;
+};
+
+RecipeViewModel.prototype.GetRecipies = function () {
+    var self = this;
+    $.getJSON("Grocery/GetRecipies").done(function (recipies) {
+        self.RenderRecipies(recipies);
+    });
+};
+
+RecipeViewModel.prototype.RenderRecipies = function(recipies) {
+    var self = this;
+    self.ClearGroceries();
+    $.each(recipies, function (key, value) {
+        var list = $("<li>");
+        list.html(value.Name).attr("id", value.Id);
+        list.on("click", function () {
+            list.addClass("active").siblings().removeClass("active");
+        });
+        self._recipies.append(list);
+    });
 };
