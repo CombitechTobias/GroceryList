@@ -17,77 +17,44 @@ namespace GroceryList.Controllers
             _groceryRepository = groceryRepository;
         }
 
-        //public async Task<ActionResult> Index()
-        //{
-        //    return View(await _groceryRepository.GetGroceries());
-        //}
-
-        public async Task<ActionResult> GetAvailableGroceries()
+        public async Task<ActionResult> GetAvailableGroceriesAsync()
         {
-            var groceries = await _groceryRepository.GetGroceries();
+            var groceries = await _groceryRepository.GetGroceriesAsync();
             return Json(
-                groceries.Except(await _groceryRepository.GetGroceriesByGroceryListId()).Select(g => new {g.Id, g.Name}), 
+                groceries.Except(await _groceryRepository.GetGroceriesByGroceryListIdAsync()).Select(g => new {g.Id, g.Name}), 
                 JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> GetGroceriesByGroceryListId()
+        public async Task<ActionResult> GetGroceriesByGroceryListIdAsync()
         {
-            var groceries = await _groceryRepository.GetGroceriesByGroceryListId();
+            var groceries = await _groceryRepository.GetGroceriesByGroceryListIdAsync();
             return Json(groceries.Select(g => new {g.Id, g.Name}), JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> AddGroceryToGroceryList(int id)
+        public async Task<ActionResult> AddGroceryToGroceryListAsync(int id)
         {
-            var grocery = await _groceryRepository.GetGroceryById(id);
+            var grocery = await _groceryRepository.GetGroceryByIdAsync(id);
             if (grocery == null) return Json(JsonRequestBehavior.DenyGet);
             
-            _groceryRepository.AddGroceryToGroceryList(grocery);
+            _groceryRepository.AddGroceryToGroceryListAsync(grocery);
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
-        public async Task<ActionResult> RemoveGroceryFromGroceryList(int id)
+        public async Task<ActionResult> RemoveGroceryFromGroceryListAsync(int id)
         {
-            var grocery = await _groceryRepository.GetGroceryById(id);
+            var grocery = await _groceryRepository.GetGroceryByIdAsync(id);
             if (grocery == null) return Json(JsonRequestBehavior.DenyGet);
             
-            _groceryRepository.RemoveGroceryFromGroceryList(grocery);
+            _groceryRepository.RemoveGroceryFromGroceryListAsync(grocery);
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
-        public ActionResult Create()
+        public async Task<ActionResult> GetRecipiesAsync()
         {
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Create(Grocery grocery)
-        {
-            _groceryRepository.AddGrocery(grocery);
-            return RedirectToAction("Index");
-        }
-
-        public async Task<ActionResult> Edit(int id)
-        {
-            return View(await _groceryRepository.GetGroceryById(id));
-        }
-
-        [HttpPost]
-        public ActionResult Edit(Grocery grocery)
-        {
-            //todo: Edit grocery
-            return RedirectToAction("Index");
-        }
-
-        public ActionResult Delete(int id)
-        {
-           throw new NotImplementedException();
-        }
-
-        [HttpPost]
-        public ActionResult Delete(Grocery grocery)
-        {
-            _groceryRepository.RemoveGrocery(grocery);
-            return RedirectToAction("Index");
+            var recipies = await _groceryRepository.GetRecipiesAsync();
+            return Json(
+                recipies.Select(r => new {r.Id, r.Name}),
+                JsonRequestBehavior.AllowGet);
         }
     }
 }

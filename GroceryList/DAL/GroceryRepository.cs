@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using GroceryList.Models;
+using WebGrease.Css.Extensions;
 
 namespace GroceryList.DAL
 {
@@ -18,45 +19,45 @@ namespace GroceryList.DAL
             _context = context;
         }
 
-        public async Task<IEnumerable<Grocery>> GetGroceries()
+        public async Task<IEnumerable<Grocery>> GetGroceriesAsync()
         {
             return  await _context.Groceries.ToListAsync();
         }
 
-        public async Task<Grocery> GetGroceryById(int id)
+        public async Task<Grocery> GetGroceryByIdAsync(int id)
         {
             return await _context.Groceries.FirstOrDefaultAsync(g => g.Id == id);
         }
 
-        public async Task<IEnumerable<Grocery>> GetGroceriesByName(string name)
+        public async Task<IEnumerable<Grocery>> GetGroceriesByNameAsync(string name)
         {
             return await Task.Run<IEnumerable<Grocery>>(() => _context.Groceries.Where(g => g.Name.StartsWith(name)).ToList());
         }
 
-        public void RemoveGrocery(Grocery grocery)
+        public async void RemoveGroceryAsync(Grocery grocery)
         {
             if (grocery == null) throw new ArgumentException("grocery");
 
             _context.Groceries.Remove(grocery);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void RemoveGrocery(int id)
+        public async void RemoveGroceryAsync(int id)
         {
-            var grocery = _context.Groceries.Find(id);
+            var grocery = await _context.Groceries.FindAsync(id);
             _context.Groceries.Remove(grocery);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void AddGrocery(Grocery grocery)
+        public async void AddGroceryAsync(Grocery grocery)
         {
             if (grocery == null) throw new ArgumentException("grocery");
 
             _context.Groceries.Add(grocery);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void AddGroceryToGroceryList(Grocery grocery)
+        public void AddGroceryToGroceryListAsync(Grocery grocery)
         {
             if (grocery == null) throw new ArgumentException("grocery");
 
@@ -64,7 +65,7 @@ namespace GroceryList.DAL
             _context.SaveChanges();
         }
 
-        public void RemoveGroceryFromGroceryList(Grocery grocery)
+        public void RemoveGroceryFromGroceryListAsync(Grocery grocery)
         {
             if (grocery == null) throw new ArgumentException("grocery");
 
@@ -72,9 +73,26 @@ namespace GroceryList.DAL
             _context.SaveChanges();
         }
 
-        public async Task<IEnumerable<Grocery>> GetGroceriesByGroceryListId()
+        public async Task<IEnumerable<Grocery>> GetGroceriesByGroceryListIdAsync()
         {
             return await Task.Run<IEnumerable<Grocery>>(() => _context.GroceryLists.First().Groceries.ToList());
+        }
+
+        public async Task<IEnumerable<Recipe>> GetRecipiesAsync()
+        {
+            return await _context.Recipes.ToListAsync();
+        }
+
+        public async void AddGroceriesByRecipeIdAsync(int id)
+        {
+            var recipe = await _context.Recipes.FirstOrDefaultAsync(r => r.Id == id);
+            if (recipe == null) return;
+
+            recipe.Groceries.ForEach(async (g) =>
+            {
+                var groceryList = await _context.GroceryLists.FirstAsync();
+                groceryList.Groceries.Add(g);
+            });
         }
 
         #region IDisposable

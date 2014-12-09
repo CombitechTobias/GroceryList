@@ -16,7 +16,7 @@ namespace GroceryList.DAL
 
         public DbSet<Grocery> Groceries { get; set; }
         public DbSet<Models.GroceryList> GroceryLists { get; set; }
-        //public DbSet<GroceryListItem> GroceryListItems { get; set; } 
+        public DbSet<Recipe> Recipes { get; set; } 
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

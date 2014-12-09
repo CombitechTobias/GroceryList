@@ -9,15 +9,18 @@ namespace GroceryList.DAL
 {
     public interface IGroceryRepository : IDisposable
     {
-        Task<IEnumerable<Grocery>> GetGroceries();
-        Task<Grocery> GetGroceryById(int id);
-        Task<IEnumerable<Grocery>> GetGroceriesByName(string name);
-        void RemoveGrocery(Grocery grocery);
-        void RemoveGrocery(int id);
-        void AddGrocery(Grocery grocery);
+        Task<IEnumerable<Grocery>> GetGroceriesAsync();
+        Task<Grocery> GetGroceryByIdAsync(int id);
+        Task<IEnumerable<Grocery>> GetGroceriesByNameAsync(string name);
+        void RemoveGroceryAsync(Grocery grocery);
+        void RemoveGroceryAsync(int id);
+        void AddGroceryAsync(Grocery grocery);
 
-        void AddGroceryToGroceryList(Grocery grocery);
-        void RemoveGroceryFromGroceryList(Grocery grocery);
-        Task<IEnumerable<Grocery>> GetGroceriesByGroceryListId();
+        void AddGroceryToGroceryListAsync(Grocery grocery);
+        void RemoveGroceryFromGroceryListAsync(Grocery grocery);
+        Task<IEnumerable<Grocery>> GetGroceriesByGroceryListIdAsync();
+
+        Task<IEnumerable<Recipe>> GetRecipiesAsync();
+        void AddGroceriesByRecipeIdAsync(int id);
     }
 }

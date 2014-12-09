@@ -10,6 +10,7 @@ namespace GroceryList.Models
         public int Id { get; set; }
         public string Name { get; set; }
 
-        public virtual ICollection<GroceryList> GroceryLists { get; set; } 
+        public virtual ICollection<GroceryList> GroceryLists { get; set; }
+        public virtual ICollection<Recipe> Recipes { get; set; } 
     }
 }
