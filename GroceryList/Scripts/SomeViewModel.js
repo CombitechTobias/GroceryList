@@ -1,6 +1,8 @@
 ﻿function SomeViewModel(initArguments) {
     var self = this;
 
+    self._hub = $.connection.groceriesHub;
+
     self._addGrocery = $(initArguments.AddGrocery);
     self._removeGrocery = $(initArguments.RemoveGrocery);
 
@@ -9,8 +11,20 @@
     self._recipes = new RecipeViewModel($(initArguments.Recipes));
 };
 
+SomeViewModel.prototype.Groceries = function() {
+    var self = this;
+    return self._groceries;
+};
+
+SomeViewModel.prototype.GroceryList = function() {
+    var self = this;
+    return self._groceryList;
+};
+
 SomeViewModel.prototype.Initialize = function() {
     var self = this;
+    $.connection.hub.start();
+
     self._groceries.GetGroceries();
     self._groceryList.GetGroceries();
     self._recipes.GetRecipes();
@@ -20,18 +34,26 @@ SomeViewModel.prototype.Initialize = function() {
 
 SomeViewModel.prototype.SetupEvents = function () {
     var self = this;
+    self._hub.client.updateAvailableGroceries = function (groceries) {
+        console.log("updateAvailableGroceries");
+        self._groceries.RenderGroceries(groceries);
+    };
+
+    self._hub.client.updateGroceriesInGroceryList = function (groceries) {
+        console.log("updateGroceriesInGroceryList");
+        self._groceries.RenderGroceries(groceries);
+    };
+
     self._addGrocery.on("click", function () {
         var id = self.GetSelectedGroceryId();
         $.getJSON("Grocery/AddGroceryToGroceryList/" + id, function () {
-            self._groceries.GetGroceries();
-            self._groceryList.GetGroceries();
+            console.log("addGrocery");
         });
     });
     self._removeGrocery.on("click", function () {
         var id = self.GetSelectedGroceryIdFromGroceryList();
-        $.getJSON("Grocery/RemoveGroceryFromGroceryList/" + id, function() {
-            self._groceries.GetGroceries();
-            self._groceryList.GetGroceries();
+        $.getJSON("Grocery/RemoveGroceryFromGroceryList/" + id, function () {
+            console.log("deleteGrocery");
         });
     });
 };

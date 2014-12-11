@@ -5,7 +5,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using GroceryList.DAL;
+using GroceryList.Hubs;
 using GroceryList.Models;
+using Microsoft.AspNet.SignalR;
 
 namespace GroceryList.Controllers
 {
@@ -37,6 +39,8 @@ namespace GroceryList.Controllers
             if (grocery == null) return Json(JsonRequestBehavior.DenyGet);
             
             _groceryRepository.AddGroceryToGroceryListAsync(grocery);
+            await Task.Run(() => NotifyClientsOnUpdateAsync());
+
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
@@ -46,6 +50,8 @@ namespace GroceryList.Controllers
             if (grocery == null) return Json(JsonRequestBehavior.DenyGet);
             
             _groceryRepository.RemoveGroceryFromGroceryListAsync(grocery);
+            await Task.Run(() => NotifyClientsOnUpdateAsync());
+
             return Json(true, JsonRequestBehavior.AllowGet);
         }
 
@@ -55,6 +61,20 @@ namespace GroceryList.Controllers
             return Json(
                 recipies.Select(r => new {r.Id, r.Name}),
                 JsonRequestBehavior.AllowGet);
+        }
+
+        private async void NotifyClientsOnUpdateAsync()
+        {
+            var hubContext = GlobalHost.ConnectionManager.GetHubContext<GroceriesHub>();
+
+            var groceriesInGroceryList = await _groceryRepository.GetGroceriesByGroceryListIdAsync();
+            await hubContext.Clients.All.updateGroceriesInGroceryList(groceriesInGroceryList.Select(g => new { g.Id, g.Name }));
+
+            var allGroceries = await _groceryRepository.GetGroceriesAsync();
+            var availableGroceries =
+                allGroceries.Except(groceriesInGroceryList).Select(g => new {g.Id, g.Name});
+            await hubContext.Clients.All.updateAvailableGroceries(availableGroceries.Select(g => new { g.Id, g.Name }));
+
         }
     }
 }

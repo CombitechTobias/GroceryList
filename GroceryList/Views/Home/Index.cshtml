@@ -5,6 +5,8 @@
 @section scripts
 {
     <script type="text/javascript" src="/Scripts/SomeViewModel.js"></script>
+    <script src="~/Scripts/jquery.signalR-2.1.2.min.js"></script>
+    <script src="signalr/hubs"></script>
     <script type="text/javascript">
         $(function() {
             var someViewModel = new SomeViewModel(
@@ -20,7 +22,6 @@
             someViewModel.Initialize();
         });
     </script>
-}
 
 <div class="row">
     <div class="col-md-2">
@@ -30,6 +31,7 @@
     <div class="col-md-2">
         <input type="button" id="addGrocery" value="<" />
         <input type="button" id="removeGrocery" value=">"/>
+        <input type="button" id="test"/>
     </div>
     <div class="col-md-2">
         <h2>Varor</h2>
