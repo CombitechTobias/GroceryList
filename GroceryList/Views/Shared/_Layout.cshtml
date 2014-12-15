@@ -13,7 +13,7 @@
         <header>
             <div class="content-wrapper">
                 <div class="float-left">
-                    <p>Grocery List - din hjälp i matbutiken</p>
+                    <p>Grocery List - din hjälpreda i matbutiken</p>
                 </div>
                 <div class="float-right">
                     <nav>
@@ -21,8 +21,9 @@
                             <li>@Html.ActionLink("Home", "Index", "Home")</li>
                             <li>@Html.ActionLink("About", "About", "Home")</li>
                             <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                            <li>@Html.ActionLink("Groceries", "Index", "Grocery")</li>
+                            @*<li>@Html.ActionLink("Groceries", "Index", "Grocery")</li>*@
                         </ul>
+                        @Html.Partial("_LoginPartial")
                     </nav>
                 </div>
             </div>

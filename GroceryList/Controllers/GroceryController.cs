@@ -39,7 +39,7 @@ namespace GroceryList.Controllers
             if (grocery == null) return Json(JsonRequestBehavior.DenyGet);
             
             _groceryRepository.AddGroceryToGroceryListAsync(grocery);
-            await Task.Run(() => NotifyClientsOnUpdateAsync());
+            await NotifyClientsOnUpdateAsync();
 
             return Json(true, JsonRequestBehavior.AllowGet);
         }
@@ -50,7 +50,7 @@ namespace GroceryList.Controllers
             if (grocery == null) return Json(JsonRequestBehavior.DenyGet);
             
             _groceryRepository.RemoveGroceryFromGroceryListAsync(grocery);
-            await Task.Run(() => NotifyClientsOnUpdateAsync());
+            await NotifyClientsOnUpdateAsync();
 
             return Json(true, JsonRequestBehavior.AllowGet);
         }
@@ -63,7 +63,7 @@ namespace GroceryList.Controllers
                 JsonRequestBehavior.AllowGet);
         }
 
-        private async void NotifyClientsOnUpdateAsync()
+        private async Task NotifyClientsOnUpdateAsync()
         {
             var hubContext = GlobalHost.ConnectionManager.GetHubContext<GroceriesHub>();
 

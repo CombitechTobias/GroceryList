@@ -41,7 +41,7 @@ SomeViewModel.prototype.SetupEvents = function () {
 
     self._hub.client.updateGroceriesInGroceryList = function (groceries) {
         console.log("updateGroceriesInGroceryList");
-        self._groceries.RenderGroceries(groceries);
+        self._groceryList.RenderGroceries(groceries);
     };
 
     self._addGrocery.on("click", function () {
